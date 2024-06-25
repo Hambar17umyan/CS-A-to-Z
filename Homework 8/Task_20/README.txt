@@ -1,0 +1,1 @@
+﻿This task is similar to one of previous ones.

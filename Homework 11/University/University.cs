@@ -1,129 +1,162 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using University;
 
 namespace University
 {
     internal class University
     {
+        //Properties
+        private string ID;
+        public decimal MonthlyFee { get; private set; }
+        public string Name { get; private set; }
+        public Rector Rector { get; private set; }
+        public List<Teacher?> Teachers { get; private set; }
+        public List<Student?> Students { get; private set; }
+        public Teacher?[] Subjects;
         public decimal MonthlyIncome { get; private set; }
         public decimal MonthlyOutcome { get; private set; }
-
-        public Rector? Rector { get; private set; }
         public decimal Budget { get; private set; }
-
         public int StudentCount => Students.Count;
         public int TeacherCount => Teachers.Count;
 
-        public Teacher[] SubjectTeacher;
-
-        public List<Teacher>? Teachers { get; }
-        public List<Student>? Students { get; }
-
-        public University(decimal initialBudget, Rector rector)
+        //Public Methods
+        public University(string name, decimal initialBudget, Rector rector, decimal monthlyFee)
         {
-            Budget = initialBudget;
-            Teachers = new List<Teacher>();
-            Students = new List<Student>();
-            SubjectTeacher = new Teacher[7];
+            Name = name;
             Rector = rector;
-            bool b = rector.SetUniversity(this);
-            if (!b)
-            {
-                throw new Exception("The rector has already been employed in other university!");
-            }
+            Budget = initialBudget;
+            ID = CreateId();
+            rector.SetUniversity(this, ID);
+            Subjects = new Teacher?[7];
+            Students = new List<Student?>();
+            Teachers = new List<Teacher?>();
+            MonthlyFee = monthlyFee;
         }
-
-        public void TryHireTeacher(Teacher newTeacher, Rector rector, out bool success)
+        public void Represent()
         {
-            success = true;
-            if (newTeacher.Subject == Subject.None)
+            Console.WriteLine(this.GetType().ToString());
+            Console.WriteLine("Name: " + Name);
+            Console.WriteLine("Rector: " + Rector);
+
+            Console.WriteLine("Students:");
+            foreach (var student in Students)
             {
-                success = false;
-                return;
+                Console.WriteLine(new string('-', 15));
+                student.RepresentStudent();
             }
-            if (newTeacher.Status == UnemployedStatus.OpenToWork && !newTeacher.IsEmployed)
+            Console.WriteLine();
+            Console.WriteLine("Teachers:");
+
+            for (int i = 1; i < Subjects.Length; i++)
             {
-                if (Rector == rector)
+                Console.WriteLine(new string('-', 15));
+                Console.WriteLine("Subject: " + ((Subject)i).ToString());
+                if (Subjects[i] == null)
                 {
-                    if (SubjectTeacher[(int)newTeacher.Subject] != null)
-                    {
-                        if (SubjectTeacher[(int)newTeacher.Subject].Salary < newTeacher.Salary)
-                        {
-                            FireTeacher(SubjectTeacher[(int)newTeacher.Subject]);
-                            HireTeacher(newTeacher);
-                            newTeacher.TryAddUniversity(this, signiture, out success);
-                            return;
-
-                        }
-                    }
-                    else if (newTeacher.Salary + MonthlyOutcome <= MonthlyIncome)
-                    {
-                        HireTeacher(newTeacher);
-                        newTeacher.TryAddUniversity(this, signiture, out success);
-                        return;
-                    }
+                    continue;
                 }
+                Subjects[i].RepresentTeacher();
             }
-            success = false;
         }
-
-        private void FireTeacher(Teacher oldTeacher)
+        public bool DeleteTeacher(Teacher t, Signature s)//Because they quit. Returns false if cannot succeed
         {
-            Teachers.Remove(oldTeacher);
-            MonthlyOutcome -= oldTeacher.Salary;
-            SubjectTeacher[(int)oldTeacher.Subject] = null;
-        }
-        public void TryFireTeacher(Teacher oldTeacher, Signiture signiture, out bool success)
-        {
-            success = true;
-            if (Rector.isValidSigniture(signiture))
+            if (!t.IsEmployed)
+                return false;
+            if (t.University != this)
+                return false;
+            if (t.AuthorizeTheSignature(s))
             {
-                FireTeacher(oldTeacher);
-                oldTeacher.TryRemoveUniversity(this, signiture, out success);
-                return;
-            }
-            success = false;
-        }
+                bool res = Teachers.Remove(t);
+                if (!res)
+                    return false;
+                MonthlyOutcome -= t.Salary;
+                Subjects[(int)t.Subject] = null;
 
-        public void TryRemoveTeacher(Teacher oldTeacher, Signiture signiture, out bool success)
+                return true;
+            }
+            else return false;
+        }
+        public bool DeleteFiredTeacher(Teacher t, Signature s)
         {
-            success = true;
-            if (oldTeacher.isValidSigniture(signiture))
+            if (!t.IsEmployed)
+                return false;
+            if (t.University != this)
+                return false;
+            if (Rector.AuthorizeTheSignature(s))
             {
-                RemoveTeacher(oldTeacher);
-                return;
+                Teachers.Remove(t);
+                MonthlyOutcome -= t.Salary;
+                Subjects[(int)t.Subject] = null;
+
+                return t.GetFired(s); ;
             }
-            success = false;
+            else return false;
         }
-
-        private void RemoveTeacher(Teacher teacher)
+        public bool AddTeacher(Teacher t, Signature s)
         {
-            Teachers.Remove(teacher);
-            MonthlyOutcome -= teacher.Salary;
-            SubjectTeacher[(int)teacher.Subject] = null;
-        }
+            if (t.IsEmployed)
+                return false;
+            if (Rector.AuthorizeTheSignature(s) && !t.IsEmployed && t.Status == Status.OpenToWork && MonthlyIncome >= MonthlyOutcome + t.Salary && Subjects[(int)t.Subject] == null)
+            {
+                Teachers.Add(t);
+                MonthlyOutcome += t.Salary;
+                Subjects[(int)t.Subject] = t;
 
-        private void HireTeacher(Teacher newTeacher)
+                return t.GetHired(s, this);
+            }
+            else return false;
+        }
+        public bool AddStudent(Student student, Signature signature)
         {
-            Teachers.Add(newTeacher);
-            MonthlyOutcome += newTeacher.Salary;
-            SubjectTeacher[(int)newTeacher.Subject] = newTeacher;
+            if (student.InUniversity)
+            {
+                return false;
+            }
+            if (Rector.AuthorizeTheSignature(signature))
+            {
+                MonthlyIncome += MonthlyFee;
+                Students.Add(student);
+                return true;
+            }
+            else return false;
         }
-    }
 
-    enum Subject
-    {
-        None = 0,
-        English = 1,
-        Mathematics = 2,
-        Physics = 3,
-        Informatics = 4,
-        PE = 5,
-        Art = 6
-    }
+        public bool RemoveStudent(Student student, Signature signature)
+        {
+            if (student.InUniversity)
+            {
+                return false;
+            }
+            if (Rector.AuthorizeTheSignature(signature))
+            {
+                MonthlyIncome -= MonthlyFee;
+                Students.Remove(student);
+                return true;
+            }
+            else return false;
+        }
 
-    enum UnemployedStatus
-    {
-        OpenToWork,
-        CloseToWork
+        public bool isAuthorized(string password)
+        {
+            if (password == this.ID)
+                return true;
+            return false;
+        }
+        //Static methods
+        private static string CreateId()
+        {
+            StringBuilder sb = new StringBuilder();
+            Random rd = new Random();
+            for (int i = 0; i < 15; i++)
+            {
+                int j = rd.Next(0, 9);
+                sb.Append(j + '0');
+            }
+            return sb.ToString();
+        }
     }
 }

@@ -10,10 +10,10 @@ namespace University1
 {
     internal class Rector : Human
     {
-        public University University { get; private set; }
+        public University? University { get; private set; }
 
         //Public Methods
-        public Rector(string name, string surname, Gender gender, int age, decimal budget):base(name, surname, gender, age, budget)
+        public Rector(string name, string surname, Gender gender, int age, decimal budget) : base(name, surname, gender, age, budget)
         {
 
         }
@@ -35,12 +35,37 @@ namespace University1
 
         public bool Hire(Teacher teacher)
         {
+            if(University == null)
+                return false;
             return University.AddTeacher(teacher, Signature);
         }
 
         public bool Fire(Teacher teacher)
         {
+            if (University == null)
+                return false;
             return University.DeleteFiredTeacher(teacher, Signature);
+        }
+
+        public bool AdmitStudent(Student student)
+        {
+            if (University == null)
+            {
+                return false;
+            }
+
+            return student.GetAdmittedToUniversity(University, Signature) && University.AddStudent(student, Signature);
+        }
+
+        public bool BanStudent(Student student)
+        {
+            if (University == null)
+            {
+                return false;
+            }
+
+            return student.GetBannedFromUniversity(Signature) && University.RemoveStudent(student, Signature);
+
         }
     }
 }

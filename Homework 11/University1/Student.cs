@@ -8,27 +8,43 @@ namespace University1
 {
     internal class Student : Human
     {
-        (int count, Grade grade)[] Grades;
-        University University;
+        University? University;
+        public bool InUniversity { get; private set; }
+
         public Student(string name, string surname, Gender gender, int age, decimal budget) : base(name, surname, gender, age, budget)
         {
-            Grades = new (int count, Grade grade)[7];
+            InUniversity = false;
         }
-
-        public void 
 
         public void RepresentStudent()
         {
-            this.Represent();
+            Represent();
         }
-    }
-    public enum Grade
-    {
-        NotTaken = 0,
-        F = 1,
-        D = 2,
-        C = 3,
-        B = 4,
-        A = 5
+
+        public bool GetAdmittedToUniversity(University university, Signature signature)
+        {
+            if (InUniversity)
+                return false;
+            if(university.Rector.AuthorizeTheSignature(signature))
+            {
+                University = university;
+                InUniversity = true;
+                return true;
+            }
+            return false;
+        }
+
+        public bool GetBannedFromUniversity(Signature signature)
+        {
+            if (!InUniversity)
+                return false;
+            if (University.Rector.AuthorizeTheSignature(signature))
+            {
+                University = null;
+                InUniversity = false;
+                return true;
+            }
+            return false;
+        }
     }
 }

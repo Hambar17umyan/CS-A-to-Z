@@ -292,7 +292,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task_14", "Homework 11\Task
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task_15", "Homework 11\Task_15\Task_15.csproj", "{1A69C701-6088-4044-9468-DA197BE37C16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Copying the struct members", "Homework 11\Copying the struct members\Copying the struct members.csproj", "{440EE0A6-DD7C-4602-931F-C016C154425C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Copying the struct members", "Homework 11\Copying the struct members\Copying the struct members.csproj", "{440EE0A6-DD7C-4602-931F-C016C154425C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Homework 12", "Homework 12", "{4415AD0C-D56F-4D69-819A-41C6972FC2E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "University", "Homework 12\University\University.csproj", "{A5E92D40-20A4-41A8-A05B-B1BC25DFB27F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -832,6 +836,10 @@ Global
 		{440EE0A6-DD7C-4602-931F-C016C154425C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{440EE0A6-DD7C-4602-931F-C016C154425C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{440EE0A6-DD7C-4602-931F-C016C154425C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5E92D40-20A4-41A8-A05B-B1BC25DFB27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5E92D40-20A4-41A8-A05B-B1BC25DFB27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5E92D40-20A4-41A8-A05B-B1BC25DFB27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5E92D40-20A4-41A8-A05B-B1BC25DFB27F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -970,6 +978,7 @@ Global
 		{1495A9A0-C9AC-481B-BBA0-B3AA7E3ED8CC} = {4C6E3977-351D-43A3-A6EA-9DA2272B7D00}
 		{1A69C701-6088-4044-9468-DA197BE37C16} = {4C6E3977-351D-43A3-A6EA-9DA2272B7D00}
 		{440EE0A6-DD7C-4602-931F-C016C154425C} = {4C6E3977-351D-43A3-A6EA-9DA2272B7D00}
+		{A5E92D40-20A4-41A8-A05B-B1BC25DFB27F} = {4415AD0C-D56F-4D69-819A-41C6972FC2E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E56787D-E38B-443F-AB68-434BCD41AF71}

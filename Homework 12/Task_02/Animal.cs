@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace University
+namespace Task_02
 {
-    internal class Signature
+    internal abstract class Animal
     {
-        private string ID;
-        public Signature(string code)
+        public Animal() 
         {
-            ID = code;
+        
         }
+
+        public abstract void MakeSound();
     }
 }

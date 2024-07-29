@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace University
+namespace Pizza_Factory_Application
 {
-    static class ConstructionCompany
+    internal class Program
     {
-        public static decimal MoneyForSingleSeat = 10;
+        static void Main(string[] args)
+        {
+            
+        }
     }
 }

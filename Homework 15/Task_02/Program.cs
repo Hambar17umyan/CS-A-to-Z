@@ -59,7 +59,7 @@ namespace Task_02
             Count++;
         }
 
-        public void Remove(T value)
+        public void Remove(T value)//remove first
         {
             Node<T>? node = First;
             while (node != null)
